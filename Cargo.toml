@@ -1,0 +1,18 @@
+[package]
+name = "steam-machine-id"
+version = "0.1.0"
+edition = "2021"
+description = "For generating Steam machine IDs."
+authors = ["Julia"]
+homepage = "https://github.com/juliarose/steam-machine-id"
+repository = "https://github.com/juliarose/steam-machine-id"
+license = "MIT"
+keywords = ["steam", "valve", "machineid"]
+readme = "README.md"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+sha1 = "^0.10"
+bytes = "^1.5.0"
+rand = "^0.8"
