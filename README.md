@@ -1,6 +1,6 @@
 # steam-machine-id
 
-Used for generating Steam machine IDs.
+Used for generating Steam machine IDs. Based on [node-steam-user](https://github.com/DoctorMcKay/node-steam-user).
 
 ## Usage
 
