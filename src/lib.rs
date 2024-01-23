@@ -42,11 +42,11 @@ const SHA_1_HASH_VALUE_LENGTH: usize = 40;
 /// A Steam machine ID.
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct MachineId {
-    /// The BB3 SHA1 hash value.
+    /// The BB3 SHA1 hexadecimal hash value 
     pub value_bb3: Sha1HashValue,
-    /// The FF2 SHA1 hash value.
+    /// The FF2 SHA1 hexadecimal hash value.
     pub value_ff2: Sha1HashValue,
-    /// The 3B3 SHA1 hash value.
+    /// The 3B3 SHA1 hexadecimal hash value.
     pub value_3b3: Sha1HashValue,
 }
 
