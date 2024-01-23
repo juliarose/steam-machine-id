@@ -161,19 +161,19 @@ fn create_machine_id_from_values(
     buffer.put(get_c_string_bytes("BB3").as_slice()); // 4 bytes, total 20
     buffer.put(val_bb3); // 40 bytes, total 60
     // null terminator
-    buffer.put_i8(0); // 1 byte, total 61
+    buffer.put([0].as_slice()); // 1 byte, total 61
     
     buffer.put_i8(1); // 1 byte, total 62
     buffer.put(get_c_string_bytes("FF2").as_slice()); // 4 bytes, total 66
     buffer.put(val_ff2); // 40 bytes, total 106
     // null terminator
-    buffer.put_i8(0); // 1 byte, total 107
+    buffer.put([0].as_slice()); // 1 byte, total 107
     
     buffer.put_i8(1); // 1 byte, total 108
     buffer.put(get_c_string_bytes("3B3").as_slice()); // 4 bytes, total 112
     buffer.put(val_3b3); // 40 bytes, total 152
     // null terminator
-    buffer.put_i8(0); // 1 byte, total 153
+    buffer.put([0].as_slice()); // 1 byte, total 153
     
     buffer.put_i8(8); // 1 byte, total 154
     buffer.put_i8(8); // 1 byte, total 155
