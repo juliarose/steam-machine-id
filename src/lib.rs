@@ -36,11 +36,11 @@ use helpers::Sha1HashValue;
 /// A Steam machine ID.
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct MachineId {
-    /// The BB3 SHA1 hexadecimal hash value 
+    /// The BB3 SHA1 hash value. This value is not hexadecimally encoded.
     pub value_bb3: Sha1HashValue,
-    /// The FF2 SHA1 hexadecimal hash value.
+    /// The FF2 SHA1 hash value. This value is not hexadecimally encoded.
     pub value_ff2: Sha1HashValue,
-    /// The 3B3 SHA1 hexadecimal hash value.
+    /// The 3B3 SHA1 hash value. This value is not hexadecimally encoded.
     pub value_3b3: Sha1HashValue,
 }
 
@@ -138,7 +138,6 @@ enum MachineIdType<'a> {
     AccountName(&'a str),
 }
 
-
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -198,8 +197,8 @@ mod tests {
     fn tests_machine_id() {
         let machine_id = MachineId::from_account_name("accountname");
         
-        assert_eq!(String::from_utf8_lossy(&machine_id.value_bb3), "6BB2445F8825BFED65E64392F0A4D549FFF7D3E1");
-        assert_eq!(String::from_utf8_lossy(&machine_id.value_ff2), "57AD645E54976AFF3B3662E9CB335D0A24AC7D08");
-        assert_eq!(String::from_utf8_lossy(&machine_id.value_3b3), "C1884025D23FB1A0DDBF125B5D9B8C0812F83390");
+        assert_eq!(bytes_to_hex_string(&machine_id.value_bb3), "6BB2445F8825BFED65E64392F0A4D549FFF7D3E1");
+        assert_eq!(bytes_to_hex_string(&machine_id.value_ff2), "57AD645E54976AFF3B3662E9CB335D0A24AC7D08");
+        assert_eq!(bytes_to_hex_string(&machine_id.value_3b3), "C1884025D23FB1A0DDBF125B5D9B8C0812F83390");
     }
 }
