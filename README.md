@@ -6,22 +6,22 @@ Used for generating Steam machine IDs. Based on [node-steam-user](https://github
 
 Generating random machine IDs.
 ```rs
-use steam_machine_id::MachineId;
+use steam_machine_id::MachineID;
 
 // Creates a random machine ID.
-let machine_id = MachineId::random();
+let machine_id = MachineID::random();
 ```
 
 Consuming a generated machine ID for a login request.
 ```rs
-use steam_machine_id::MachineId;
+use steam_machine_id::MachineID;
 
 struct LoginRequest {
     machine_id: Vec<u8>,
 }
 
 // Creates a machine ID from the given account name.
-let machine_id = MachineId::from_account_name("accountname");
+let machine_id = MachineID::from_account_name("accountname");
 let login = LoginRequest {
     // Converts the machine ID into a binary message object.
     machine_id: machine_id.into(),

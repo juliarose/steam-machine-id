@@ -10,36 +10,36 @@ pub type Sha1HashValue = [u8; 20];
 /// 
 /// Each value must be a 20-byte SHA1 hash.
 pub fn create_machine_id_from_values(
-    val_bb3: &Sha1HashValue,
-    val_ff2: &Sha1HashValue,
-    val_3b3: &Sha1HashValue,
+    value_bb3: &Sha1HashValue,
+    value_ff2: &Sha1HashValue,
+    value_3b3: &Sha1HashValue,
 ) -> Vec<u8> {
     let mut buffer = BytesMut::with_capacity(155);
-    let val_bb3 = get_c_string_bytes(&bytes_to_hex_string(val_bb3));
-    let val_ff2 = get_c_string_bytes(&bytes_to_hex_string(val_ff2));
-    let val_3b3 = get_c_string_bytes(&bytes_to_hex_string(val_3b3));
+    let value_bb3 = get_c_string_bytes(&bytes_to_hex_string(value_bb3));
+    let value_ff2 = get_c_string_bytes(&bytes_to_hex_string(value_ff2));
+    let value_3b3 = get_c_string_bytes(&bytes_to_hex_string(value_3b3));
     
     buffer.put_i8(0); // 1 byte, total 1
     buffer.put(get_c_string_bytes("MessageObject").as_slice()); // 14 bytes, total 15
     
     buffer.put_i8(1); // 1 byte, total 16
     buffer.put(get_c_string_bytes("BB3").as_slice()); // 4 bytes, total 20
-    buffer.put(val_bb3.as_slice()); // 41 bytes, total 61
+    buffer.put(value_bb3.as_slice()); // 41 bytes, total 61
     
     buffer.put_i8(1); // 1 byte, total 62
     buffer.put(get_c_string_bytes("FF2").as_slice()); // 4 bytes, total 66
-    buffer.put(val_ff2.as_slice()); // 41 bytes, total 107
+    buffer.put(value_ff2.as_slice()); // 41 bytes, total 107
     
     buffer.put_i8(1); // 1 byte, total 108
     buffer.put(get_c_string_bytes("3B3").as_slice()); // 4 bytes, total 112
-    buffer.put(val_3b3.as_slice()); // 41 bytes, total 153
+    buffer.put(value_3b3.as_slice()); // 41 bytes, total 153
     
     buffer.put_i8(8); // 1 byte, total 154
     buffer.put_i8(8); // 1 byte, total 155
     buffer.into()
 }
 
-/// Converts a byte array to a hex string.
+/// Converts a byte slice to a hex string.
 pub fn bytes_to_hex_string(input: &[u8]) -> String {
     input
         .into_iter()
@@ -60,7 +60,7 @@ pub fn get_account_name_hash_value(key: &str, account_name: &str) -> Sha1HashVal
     create_sha1(format!("SteamUser Hash {key} {account_name}").as_bytes())
 }
 
-/// Gets a null-terminated (C string) byte array from the given string.
+/// Gets a null-terminated (C string) byte vec from the given string.
 pub fn get_c_string_bytes(input: &str) -> Vec<u8> {
     let mut bytes = input.as_bytes().to_vec();
     
@@ -68,8 +68,8 @@ pub fn get_c_string_bytes(input: &str) -> Vec<u8> {
     bytes
 }
 
-/// Creates a SHA1 byte array from the given input.
-fn create_sha1(input: &[u8]) -> [u8; 20] {
+/// Creates a SHA1 byte slice from the given input.
+fn create_sha1(input: &[u8]) -> Sha1HashValue {
     Sha1::from(input).digest().bytes()
 }
 

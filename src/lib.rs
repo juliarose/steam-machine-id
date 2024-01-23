@@ -5,22 +5,22 @@
 //! 
 //! Generating random machine IDs.
 //! ```rs
-//! use steam_machine_id::MachineId;
+//! use steam_machine_id::MachineID;
 //! 
 //! // Creates a random machine ID.
-//! let machine_id = MachineId::random();
+//! let machine_id = MachineID::random();
 //! ```
 //! 
 //! Consuming a generated machine ID for a login request.
 //! ```rs
-//! use steam_machine_id::MachineId;
+//! use steam_machine_id::MachineID;
 //! 
 //! struct LoginRequest {
 //!     machine_id: Vec<u8>,
 //! }
 //! 
 //! // Creates a machine ID from the given account name.
-//! let machine_id = MachineId::from_account_name("accountname");
+//! let machine_id = MachineID::from_account_name("accountname");
 //! let login = LoginRequest {
 //!     // Converts the machine ID into a binary message object.
 //!     machine_id: machine_id.into(),
@@ -35,7 +35,7 @@ use helpers::Sha1HashValue;
 
 /// A Steam machine ID.
 #[derive(Debug, Copy, Clone, PartialEq, Eq)]
-pub struct MachineId {
+pub struct MachineID {
     /// The BB3 SHA1 hash value. This value is not hexadecimally encoded.
     pub value_bb3: Sha1HashValue,
     /// The FF2 SHA1 hash value. This value is not hexadecimally encoded.
@@ -44,9 +44,9 @@ pub struct MachineId {
     pub value_3b3: Sha1HashValue,
 }
 
-impl MachineId {
+impl MachineID {
     /// Creates a new machine ID.
-    fn new(machine_id_type: MachineIdType) -> Self {
+    fn new(machine_id_type: MachineIDType) -> Self {
         machine_id_type.into()
     }
     
@@ -54,24 +54,24 @@ impl MachineId {
     /// 
     /// # Examples
     /// ```
-    /// use steam_machine_id::MachineId;
+    /// use steam_machine_id::MachineID;
     /// 
-    /// let machine_id = MachineId::random();
+    /// let machine_id = MachineID::random();
     /// ```
     pub fn random() -> Self {
-        Self::new(MachineIdType::Random)
+        Self::new(MachineIDType::Random)
     }
     
     /// Creates a machine ID from the given account name.
     /// 
     /// # Examples
     /// ```
-    /// use steam_machine_id::MachineId;
+    /// use steam_machine_id::MachineID;
     /// 
-    /// let machine_id = MachineId::from_account_name("accountname".into());
+    /// let machine_id = MachineID::from_account_name("accountname".into());
     /// ```
     pub fn from_account_name(account_name: &str) -> Self {
-        Self::new(MachineIdType::AccountName(account_name))
+        Self::new(MachineIDType::AccountName(account_name))
     }
     
     /// Creates a message object from the machine ID.
@@ -84,19 +84,19 @@ impl MachineId {
     }
 }
 
-impl From<MachineId> for Vec<u8> {
-    fn from(machine_id: MachineId) -> Self {
+impl From<MachineID> for Vec<u8> {
+    fn from(machine_id: MachineID) -> Self {
         machine_id.to_message()
     }
 }
 
-impl From<&MachineId> for Vec<u8> {
-    fn from(machine_id: &MachineId) -> Self {
+impl From<&MachineID> for Vec<u8> {
+    fn from(machine_id: &MachineID) -> Self {
         machine_id.to_message()
     }
 }
 
-impl fmt::Display for MachineId {
+impl fmt::Display for MachineID {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         write!(
             f,
@@ -108,18 +108,18 @@ impl fmt::Display for MachineId {
     }
 }
 
-impl From<MachineIdType<'_>> for MachineId {
-    fn from(machine_id_type: MachineIdType<'_>) -> Self {
+impl From<MachineIDType<'_>> for MachineID {
+    fn from(machine_id_type: MachineIDType<'_>) -> Self {
         match machine_id_type {
-            MachineIdType::Random => {
-                MachineId {
+            MachineIDType::Random => {
+                MachineID {
                     value_bb3: helpers::get_random_hash_value(),
                     value_ff2: helpers::get_random_hash_value(),
                     value_3b3: helpers::get_random_hash_value(),
                 }
             },
-            MachineIdType::AccountName(account_name) => {
-                MachineId {
+            MachineIDType::AccountName(account_name) => {
+                MachineID {
                     value_bb3: helpers::get_account_name_hash_value("BB3", account_name),
                     value_ff2: helpers::get_account_name_hash_value("FF2", account_name),
                     value_3b3: helpers::get_account_name_hash_value("3B3", account_name),
@@ -131,7 +131,7 @@ impl From<MachineIdType<'_>> for MachineId {
 
 /// Options for creating a Steam machine ID.
 #[derive(Debug, Copy, Clone, PartialEq, Eq)]
-enum MachineIdType<'a> {
+enum MachineIDType<'a> {
     /// A random machine ID.
     Random,
     /// A machine ID created from the given account name.
@@ -161,7 +161,7 @@ mod tests {
     
     #[test]
     fn test_random_machine_id() {
-        let machine_id = MachineId::random().to_message();
+        let machine_id = MachineID::random().to_message();
         
         assert_eq!(machine_id.len(), 155);
         assert_eq!(machine_id[0], 0);
@@ -178,7 +178,7 @@ mod tests {
     
     #[test]
     fn test_create_machine_id_from_account_name() {
-        let machine_id = MachineId::from_account_name("accountname").to_message();
+        let machine_id = MachineID::from_account_name("accountname").to_message();
         
         assert_eq!(machine_id.len(), 155);
         assert_eq!(machine_id[0], 0);
@@ -195,7 +195,7 @@ mod tests {
     
     #[test]
     fn tests_machine_id() {
-        let machine_id = MachineId::from_account_name("accountname");
+        let machine_id = MachineID::from_account_name("accountname");
         
         assert_eq!(bytes_to_hex_string(&machine_id.value_bb3), "6BB2445F8825BFED65E64392F0A4D549FFF7D3E1");
         assert_eq!(bytes_to_hex_string(&machine_id.value_ff2), "57AD645E54976AFF3B3662E9CB335D0A24AC7D08");
