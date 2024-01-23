@@ -34,7 +34,7 @@ use std::fmt;
 use helpers::Sha1HashValue;
 
 /// A Steam machine ID.
-#[derive(Debug, Clone, PartialEq, Eq)]
+#[derive(Debug, Copy, Clone, PartialEq, Eq)]
 pub struct MachineId {
     /// The BB3 SHA1 hash value. This value is not hexadecimally encoded.
     pub value_bb3: Sha1HashValue,
