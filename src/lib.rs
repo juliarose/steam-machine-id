@@ -81,14 +81,22 @@ impl MachineID {
     /// use steam_machine_id::MachineID;
     /// 
     /// let accountname = "accountname";
-    /// let machine_id = MachineID::custom_format([
-    ///     format!("SteamUser Hash BB3 {accountname}"),
-    ///     format!("SteamUser Hash FF2 {accountname}"),
-    ///     format!("SteamUser Hash 3B3 {accountname}"),
-    /// ]);
+    /// let machine_id = MachineID::custom_format(
+    ///     &format!("SteamUser Hash BB3 {accountname}"),
+    ///     &format!("SteamUser Hash FF2 {accountname}"),
+    ///     &format!("SteamUser Hash 3B3 {accountname}"),
+    /// );
     /// ```
-    pub fn custom_format(format: &[String; 3]) -> Self {
-        Self::new(MachineIDType::CustomFormat(format))
+    pub fn custom_format(
+        value_bb3: &str,
+        value_ff2: &str,
+        value_3b3: &str,
+    ) -> Self {
+        Self::new(MachineIDType::CustomFormat(
+            value_bb3,
+            value_ff2,
+            value_3b3,
+        ))
     }
     
     /// Creates a message object from the machine ID.
@@ -142,11 +150,11 @@ impl From<MachineIDType<'_>> for MachineID {
                     value_3b3: helpers::get_account_name_hash_value("3B3", account_name),
                 }
             },
-            MachineIDType::CustomFormat(format) => {
+            MachineIDType::CustomFormat(value_bb3, value_ff2, value_3b3) => {
                 MachineID {
-                    value_bb3: helpers::get_custom_hash_value(&format[0]),
-                    value_ff2: helpers::get_custom_hash_value(&format[1]),
-                    value_3b3: helpers::get_custom_hash_value(&format[2]),
+                    value_bb3: helpers::get_custom_hash_value(value_bb3),
+                    value_ff2: helpers::get_custom_hash_value(value_ff2),
+                    value_3b3: helpers::get_custom_hash_value(value_3b3),
                 }
             },
         }
@@ -161,7 +169,7 @@ enum MachineIDType<'a> {
     /// A machine ID created from the given account name.
     AccountName(&'a str),
     /// A machine ID created using a custom format.
-    CustomFormat(&'a [String; 3]),
+    CustomFormat(&'a str, &'a str, &'a str),
 }
 
 #[cfg(test)]
