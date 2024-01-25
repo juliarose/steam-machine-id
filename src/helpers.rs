@@ -42,7 +42,7 @@ pub fn create_machine_id_from_values(
 /// Converts a byte slice to a hex string.
 pub fn bytes_to_hex_string(input: &[u8]) -> String {
     input
-        .into_iter()
+        .iter()
         .fold(String::with_capacity(2 * input.len()), |mut s, byte| {
             // Probably would never panic?
             write!(s, "{:02X}", byte).unwrap();
