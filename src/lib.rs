@@ -74,6 +74,23 @@ impl MachineID {
         Self::new(MachineIDType::AccountName(account_name))
     }
     
+    /// Creates a machine ID using a custom format.
+    /// 
+    /// # Examples
+    /// ```
+    /// use steam_machine_id::MachineID;
+    /// 
+    /// let accountname = "accountname";
+    /// let machine_id = MachineID::custom_format([
+    ///     format!("SteamUser Hash BB3 {accountname}"),
+    ///     format!("SteamUser Hash FF2 {accountname}"),
+    ///     format!("SteamUser Hash 3B3 {accountname}"),
+    /// ]);
+    /// ```
+    pub fn custom_format(format: &[String; 3]) -> Self {
+        Self::new(MachineIDType::CustomFormat(format))
+    }
+    
     /// Creates a message object from the machine ID.
     pub fn to_message(&self) -> Vec<u8> {
         helpers::create_machine_id_from_values(
@@ -125,6 +142,13 @@ impl From<MachineIDType<'_>> for MachineID {
                     value_3b3: helpers::get_account_name_hash_value("3B3", account_name),
                 }
             },
+            MachineIDType::CustomFormat(format) => {
+                MachineID {
+                    value_bb3: helpers::get_custom_hash_value(&format[0]),
+                    value_ff2: helpers::get_custom_hash_value(&format[1]),
+                    value_3b3: helpers::get_custom_hash_value(&format[2]),
+                }
+            },
         }
     }
 }
@@ -136,6 +160,8 @@ enum MachineIDType<'a> {
     Random,
     /// A machine ID created from the given account name.
     AccountName(&'a str),
+    /// A machine ID created using a custom format.
+    CustomFormat(&'a [String; 3]),
 }
 
 #[cfg(test)]

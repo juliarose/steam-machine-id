@@ -60,6 +60,11 @@ pub fn get_account_name_hash_value(key: &str, account_name: &str) -> Sha1HashVal
     create_sha1(format!("SteamUser Hash {key} {account_name}").as_bytes())
 }
 
+/// Gets a SHA1 hash value for the given `key` and `account_name`.
+pub fn get_custom_hash_value(value: &str) -> Sha1HashValue {
+    create_sha1(value.as_bytes())
+}
+
 /// Gets a null-terminated (C string) byte vec from the given string.
 pub fn get_c_string_bytes(input: &str) -> Vec<u8> {
     let mut bytes = input.as_bytes().to_vec();
