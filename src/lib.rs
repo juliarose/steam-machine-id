@@ -1,3 +1,5 @@
+#![warn(missing_docs)]
+
 //! Used for generating Steam machine IDs. Machine IDs are most commonly supplied to Steam when 
 //! logging in.
 //! 
@@ -27,7 +29,6 @@
 //! };
 //! ```
 
-#![warn(missing_docs)]
 mod helpers;
 
 use std::fmt;
@@ -36,11 +37,11 @@ use helpers::Sha1HashValue;
 /// A Steam machine ID.
 #[derive(Debug, Copy, Clone, PartialEq, Eq)]
 pub struct MachineID {
-    /// The BB3 SHA1 hash value. This value is not hexadecimally encoded.
+    /// The BB3 SHA1 hash value. This value is not hexadecimal encoded.
     pub value_bb3: Sha1HashValue,
-    /// The FF2 SHA1 hash value. This value is not hexadecimally encoded.
+    /// The FF2 SHA1 hash value. This value is not hexadecimal encoded.
     pub value_ff2: Sha1HashValue,
-    /// The 3B3 SHA1 hash value. This value is not hexadecimally encoded.
+    /// The 3B3 SHA1 hash value. This value is not hexadecimal encoded.
     pub value_3b3: Sha1HashValue,
 }
 
@@ -74,7 +75,8 @@ impl MachineID {
         Self::new(MachineIDType::AccountName(account_name))
     }
     
-    /// Creates a machine ID using a custom format.
+    /// Creates a machine ID using a custom format for specific use-cases. These could be anything 
+    /// you want but should generally follow the format below.
     /// 
     /// # Examples
     /// ```

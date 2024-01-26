@@ -1,15 +1,13 @@
 use std::fmt::Write;
+use std::ffi::CString;
 use bytes::{BytesMut, BufMut};
 use rand::Rng;
 use sha1_smol::Sha1;
-use std::ffi::CString;
 
 /// A SHA1 hash value.
 pub type Sha1HashValue = [u8; 20];
 
-/// Creates a machine id from the given values.
-/// 
-/// Each value must be a 20-byte SHA1 hash.
+/// Creates a machine id from the given SHA-1 hash values.
 pub fn create_machine_id_from_values(
     value_bb3: &Sha1HashValue,
     value_ff2: &Sha1HashValue,
@@ -96,6 +94,20 @@ mod tests {
     #[test]
     fn tests_get_random_hash_value() {
         let hash_value = get_random_hash_value();
+        
+        assert_eq!(hash_value.len(), 20);
+    }
+    
+    #[test]
+    fn tests_get_custom_hash_value() {
+        let hash_value = get_custom_hash_value("test");
+        
+        assert_eq!(hash_value.len(), 20);
+    }
+    
+    #[test]
+    fn tests_get_account_name_hash_value() {
+        let hash_value = get_account_name_hash_value("test", "test");
         
         assert_eq!(hash_value.len(), 20);
     }
