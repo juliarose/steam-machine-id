@@ -6,7 +6,7 @@
 //! # Usage
 //! 
 //! Generating random machine IDs.
-//! ```rust
+//! ```
 //! use steam_machine_id::MachineID;
 //! 
 //! // Creates a random machine ID.
@@ -14,7 +14,7 @@
 //! ```
 //! 
 //! Consuming a generated machine ID for a login request.
-//! ```rust
+//! ```
 //! use steam_machine_id::MachineID;
 //! 
 //! struct LoginRequest {
