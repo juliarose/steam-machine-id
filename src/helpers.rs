@@ -2,6 +2,7 @@ use std::fmt::Write;
 use bytes::{BytesMut, BufMut};
 use rand::Rng;
 use sha1_smol::Sha1;
+use std::ffi::CString;
 
 /// A SHA1 hash value.
 pub type Sha1HashValue = [u8; 20];
@@ -15,23 +16,23 @@ pub fn create_machine_id_from_values(
     value_3b3: &Sha1HashValue,
 ) -> Vec<u8> {
     let mut buffer = BytesMut::with_capacity(155);
-    let value_bb3 = get_c_string_bytes(&bytes_to_hex_string(value_bb3));
-    let value_ff2 = get_c_string_bytes(&bytes_to_hex_string(value_ff2));
-    let value_3b3 = get_c_string_bytes(&bytes_to_hex_string(value_3b3));
+    let value_bb3 = get_c_string(&bytes_to_hex_string(value_bb3));
+    let value_ff2 = get_c_string(&bytes_to_hex_string(value_ff2));
+    let value_3b3 = get_c_string(&bytes_to_hex_string(value_3b3));
     
     buffer.put_i8(0); // 1 byte, total 1
-    buffer.put(get_c_string_bytes("MessageObject").as_slice()); // 14 bytes, total 15
+    buffer.put(get_c_string("MessageObject").as_slice()); // 14 bytes, total 15
     
     buffer.put_i8(1); // 1 byte, total 16
-    buffer.put(get_c_string_bytes("BB3").as_slice()); // 4 bytes, total 20
+    buffer.put(get_c_string("BB3").as_slice()); // 4 bytes, total 20
     buffer.put(value_bb3.as_slice()); // 41 bytes, total 61
     
     buffer.put_i8(1); // 1 byte, total 62
-    buffer.put(get_c_string_bytes("FF2").as_slice()); // 4 bytes, total 66
+    buffer.put(get_c_string("FF2").as_slice()); // 4 bytes, total 66
     buffer.put(value_ff2.as_slice()); // 41 bytes, total 107
     
     buffer.put_i8(1); // 1 byte, total 108
-    buffer.put(get_c_string_bytes("3B3").as_slice()); // 4 bytes, total 112
+    buffer.put(get_c_string("3B3").as_slice()); // 4 bytes, total 112
     buffer.put(value_3b3.as_slice()); // 41 bytes, total 153
     
     buffer.put_i8(8); // 1 byte, total 154
@@ -66,11 +67,9 @@ pub fn get_custom_hash_value(value: &str) -> Sha1HashValue {
 }
 
 /// Gets a null-terminated (C string) byte vec from the given string.
-pub fn get_c_string_bytes(input: &str) -> Vec<u8> {
-    let mut bytes = input.as_bytes().to_vec();
-    
-    bytes.push(0);
-    bytes
+pub fn get_c_string(input: &str) -> Vec<u8> {
+    // As long as no null bytes ("\0") are in the string, this will never panic.
+    CString::new(input).unwrap().into_bytes_with_nul()
 }
 
 /// Creates a SHA1 byte slice from the given input.
@@ -92,5 +91,11 @@ mod tests {
         let sha1 = create_sha1(b"test");
         
         assert_eq!(sha1.len(), 20);
+    }
+    
+    #[test]
+    #[should_panic]
+    fn test_get_random_hash_value() {
+        get_c_string("\0");
     }
 }

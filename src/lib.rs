@@ -175,7 +175,7 @@ enum MachineIDType<'a> {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use helpers::{get_c_string_bytes, bytes_to_hex_string};
+    use helpers::{get_c_string, bytes_to_hex_string};
     
     #[test]
     fn tests_bytes_to_hex_string() {
@@ -187,9 +187,9 @@ mod tests {
     
     #[test]
     fn tests_get_c_string_bytes() {
-        let bytes = get_c_string_bytes("test");
+        let bytes = get_c_string("test");
         
-        assert_eq!(bytes.len(), 5);
+        assert_eq!(bytes.as_slice().len(), 5);
         assert_eq!([116, 101, 115, 116, 0], bytes.as_slice());
     }
     
@@ -199,13 +199,13 @@ mod tests {
         
         assert_eq!(machine_id.len(), 155);
         assert_eq!(machine_id[0], 0);
-        assert_eq!(&machine_id[1..15], get_c_string_bytes("MessageObject").as_slice());
+        assert_eq!(&machine_id[1..15], get_c_string("MessageObject").as_slice());
         assert_eq!(machine_id[15], 1);
-        assert_eq!(&machine_id[16..20], get_c_string_bytes("BB3").as_slice());
+        assert_eq!(&machine_id[16..20], get_c_string("BB3").as_slice());
         assert_eq!(machine_id[61], 1);
-        assert_eq!(&machine_id[62..66], get_c_string_bytes("FF2").as_slice());
+        assert_eq!(&machine_id[62..66], get_c_string("FF2").as_slice());
         assert_eq!(machine_id[107], 1);
-        assert_eq!(&machine_id[108..112], get_c_string_bytes("3B3").as_slice());
+        assert_eq!(&machine_id[108..112], get_c_string("3B3").as_slice());
         assert_eq!(machine_id[153], 8);
         assert_eq!(machine_id[154], 8);
     }
@@ -216,13 +216,13 @@ mod tests {
         
         assert_eq!(machine_id.len(), 155);
         assert_eq!(machine_id[0], 0);
-        assert_eq!(&machine_id[1..15], get_c_string_bytes("MessageObject").as_slice());
+        assert_eq!(&machine_id[1..15], get_c_string("MessageObject").as_slice());
         assert_eq!(machine_id[15], 1);
-        assert_eq!(&machine_id[16..20], get_c_string_bytes("BB3").as_slice());
+        assert_eq!(&machine_id[16..20], get_c_string("BB3").as_slice());
         assert_eq!(machine_id[61], 1);
-        assert_eq!(&machine_id[62..66], get_c_string_bytes("FF2").as_slice());
+        assert_eq!(&machine_id[62..66], get_c_string("FF2").as_slice());
         assert_eq!(machine_id[107], 1);
-        assert_eq!(&machine_id[108..112], get_c_string_bytes("3B3").as_slice());
+        assert_eq!(&machine_id[108..112], get_c_string("3B3").as_slice());
         assert_eq!(machine_id[153], 8);
         assert_eq!(machine_id[154], 8);
     }
