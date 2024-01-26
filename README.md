@@ -5,7 +5,7 @@ Used for generating Steam machine IDs. Based on [node-steam-user](https://github
 ## Usage
 
 Generating random machine IDs.
-```rs
+```rust
 use steam_machine_id::MachineID;
 
 // Creates a random machine ID.
@@ -13,7 +13,7 @@ let machine_id = MachineID::random();
 ```
 
 Consuming a generated machine ID for a login request.
-```rs
+```rust
 use steam_machine_id::MachineID;
 
 struct LoginRequest {
