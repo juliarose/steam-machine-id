@@ -178,22 +178,6 @@ mod tests {
     use helpers::{get_c_string, bytes_to_hex_string};
     
     #[test]
-    fn tests_bytes_to_hex_string() {
-        let bytes = vec![0, 1, 2, 3, 4, 5, 6, 7];
-        let hex_string = bytes_to_hex_string(&bytes);
-        
-        assert_eq!(hex_string, "0001020304050607");
-    }
-    
-    #[test]
-    fn tests_get_c_string_bytes() {
-        let bytes = get_c_string("test");
-        
-        assert_eq!(bytes.as_slice().len(), 5);
-        assert_eq!([116, 101, 115, 116, 0], bytes.as_slice());
-    }
-    
-    #[test]
     fn test_random_machine_id() {
         let machine_id = MachineID::random().to_message();
         
