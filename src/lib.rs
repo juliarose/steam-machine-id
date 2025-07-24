@@ -46,11 +46,6 @@ pub struct MachineID {
 }
 
 impl MachineID {
-    /// Creates a new machine ID.
-    fn new(machine_id_type: MachineIDType) -> Self {
-        machine_id_type.into()
-    }
-    
     /// Creates a random machine ID.
     /// 
     /// # Examples
@@ -60,7 +55,11 @@ impl MachineID {
     /// let machine_id = MachineID::random();
     /// ```
     pub fn random() -> Self {
-        Self::new(MachineIDType::Random)
+        Self {
+            value_bb3: helpers::get_random_hash_value(),
+            value_ff2: helpers::get_random_hash_value(),
+            value_3b3: helpers::get_random_hash_value(),
+        }
     }
     
     /// Creates a machine ID from the given account name.
@@ -69,10 +68,14 @@ impl MachineID {
     /// ```
     /// use steam_machine_id::MachineID;
     /// 
-    /// let machine_id = MachineID::from_account_name("accountname".into());
+    /// let machine_id = MachineID::from_account_name("accountname");
     /// ```
-    pub fn from_account_name(account_name: &str) -> Self {
-        Self::new(MachineIDType::AccountName(account_name))
+    pub fn from_account_name<S: AsRef<str>>(account_name: S) -> Self {
+        Self {
+            value_bb3: helpers::get_account_name_hash_value("BB3", account_name.as_ref()),
+            value_ff2: helpers::get_account_name_hash_value("FF2", account_name.as_ref()),
+            value_3b3: helpers::get_account_name_hash_value("3B3", account_name.as_ref()),
+        }
     }
     
     /// Creates a machine ID using a custom format for specific use-cases. These could be anything 
@@ -89,16 +92,16 @@ impl MachineID {
     ///     &format!("SteamUser Hash 3B3 {accountname}"),
     /// );
     /// ```
-    pub fn custom_format(
-        value_bb3: &str,
-        value_ff2: &str,
-        value_3b3: &str,
+    pub fn custom_format<S: AsRef<str>>(
+        value_bb3: S,
+        value_ff2: S,
+        value_3b3: S,
     ) -> Self {
-        Self::new(MachineIDType::CustomFormat(
-            value_bb3,
-            value_ff2,
-            value_3b3,
-        ))
+        Self {
+            value_bb3: helpers::get_custom_hash_value(value_bb3.as_ref()),
+            value_ff2: helpers::get_custom_hash_value(value_ff2.as_ref()),
+            value_3b3: helpers::get_custom_hash_value(value_3b3.as_ref()),
+        }
     }
     
     /// Creates a message object from the machine ID.
@@ -133,45 +136,6 @@ impl fmt::Display for MachineID {
             helpers::bytes_to_hex_string(&self.value_3b3),
         )
     }
-}
-
-impl From<MachineIDType<'_>> for MachineID {
-    fn from(machine_id_type: MachineIDType<'_>) -> Self {
-        match machine_id_type {
-            MachineIDType::Random => {
-                MachineID {
-                    value_bb3: helpers::get_random_hash_value(),
-                    value_ff2: helpers::get_random_hash_value(),
-                    value_3b3: helpers::get_random_hash_value(),
-                }
-            },
-            MachineIDType::AccountName(account_name) => {
-                MachineID {
-                    value_bb3: helpers::get_account_name_hash_value("BB3", account_name),
-                    value_ff2: helpers::get_account_name_hash_value("FF2", account_name),
-                    value_3b3: helpers::get_account_name_hash_value("3B3", account_name),
-                }
-            },
-            MachineIDType::CustomFormat(value_bb3, value_ff2, value_3b3) => {
-                MachineID {
-                    value_bb3: helpers::get_custom_hash_value(value_bb3),
-                    value_ff2: helpers::get_custom_hash_value(value_ff2),
-                    value_3b3: helpers::get_custom_hash_value(value_3b3),
-                }
-            },
-        }
-    }
-}
-
-/// Options for creating a Steam machine ID.
-#[derive(Debug, Copy, Clone, PartialEq, Eq)]
-enum MachineIDType<'a> {
-    /// A random machine ID.
-    Random,
-    /// A machine ID created from the given account name.
-    AccountName(&'a str),
-    /// A machine ID created using a custom format.
-    CustomFormat(&'a str, &'a str, &'a str),
 }
 
 #[cfg(test)]

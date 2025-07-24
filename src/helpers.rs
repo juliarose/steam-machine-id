@@ -55,13 +55,13 @@ pub fn get_random_hash_value() -> Sha1HashValue {
 }
 
 /// Gets a SHA1 hash value for the given `key` and `account_name`.
-pub fn get_account_name_hash_value(key: &str, account_name: &str) -> Sha1HashValue {
-    create_sha1(format!("SteamUser Hash {key} {account_name}").as_bytes())
+pub fn get_account_name_hash_value<T: AsRef<str>>(key: &str, account_name: T) -> Sha1HashValue {
+    create_sha1(format!("SteamUser Hash {} {}", key, account_name.as_ref()).as_bytes())
 }
 
 /// Gets a SHA1 hash value for the given `key` and `account_name`.
-pub fn get_custom_hash_value(value: &str) -> Sha1HashValue {
-    create_sha1(value.as_bytes())
+pub fn get_custom_hash_value<S: AsRef<str>>(value: S) -> Sha1HashValue {
+    create_sha1(value.as_ref().as_bytes())
 }
 
 /// Gets a null-terminated (C string) byte vec from the given string.
@@ -77,7 +77,7 @@ fn create_sha1(input: &[u8]) -> Sha1HashValue {
 
 /// Creates a random string.
 fn create_random_str() -> String {
-    rand::thread_rng().gen::<f32>().to_string()
+    rand::rng().random::<f32>().to_string()
 }
 
 #[cfg(test)]

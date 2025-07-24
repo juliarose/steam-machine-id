@@ -16,16 +16,11 @@ Consuming a generated machine ID for a login request.
 ```rust
 use steam_machine_id::MachineID;
 
-struct LoginRequest {
-    machine_id: Vec<u8>,
-}
-
 // Creates a machine ID from the given account name.
 let machine_id = MachineID::from_account_name("accountname");
-let login = LoginRequest {
-    // Converts the machine ID into a binary message object.
-    machine_id: machine_id.into(),
-};
+// Converts the machine ID into a binary message object
+// that can be sent to Steam.
+let machine_id_bytes: Vec<u8> = machine_id.into();
 ```
 
 ## License
